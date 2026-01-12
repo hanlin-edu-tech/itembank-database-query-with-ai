@@ -1,0 +1,2523 @@
+enums:
+  ConversationRole:
+    User: user
+    Assistant: assistant
+    System: system
+  CopyrightType:
+    無版權: 0
+    有版權: 1
+    翰教科: 2
+    待談: 3
+  DimensionType:
+    Knowledge: knowledge
+    Lesson: lesson
+    Recognition: recognition
+  ExportArchiveMode:
+    Always: Always
+    Auto: Auto
+  ExportType:
+    Item: Item
+    Document: Document
+    DocumentRepository: DocumentRepository
+    DocumentRepositoryPackage: DocumentRepositoryPackage
+    DocumentIssueItems: DocumentIssueItems
+    DocumentFailImportItems: DocumentFailImportItems
+    CustomFiles: CustomFiles
+  ImportItemStatus:
+    等待中: 等待中
+    待分題: 待分題
+    分題失敗: 分題失敗
+    待檢核: 待檢核
+    檢核中: 檢核中
+    紙本內容檢核失敗: 紙本內容檢核失敗
+    線上測驗檢核失敗: 線上測驗檢核失敗
+    發生未知錯誤: 發生未知錯誤
+    匯入成功: 匯入成功
+    已取消: 已取消
+  ImportTaskStatus:
+    匯入中: 匯入中
+    等待中: 等待中
+    匯入失敗: 匯入失敗
+    部分匯入失敗: 部分匯入失敗
+    匯入成功: 匯入成功
+    正在進行重轉作業: 正在進行重轉作業
+    已取消: 已取消
+  MetadataType:
+    Source: source
+    UserType: userType
+  ProcessingType:
+    Latex: latex
+    Text: text
+    Html: html
+    Error: error
+  SemesterEnum:
+    上學期: 上學期
+    下學期: 下學期
+    全部適用: 全部適用
+  TermEnum:
+    上期: 上期
+    下期: 下期
+  UsageType:
+    Regular: regular
+    Discrete: discrete
+
+collections:
+  Announcements:
+    description: "公告"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: objectId
+        description: "Id"
+      content:
+        type: string
+        description: "公告內容"
+      creator:
+        type: string
+        id_type: UserId
+        description: "創建者"
+      createdTime:
+        type: datetime
+        description: "建立時間"
+      version:
+        type: number
+        description: "版本"
+  BodiesOfKnowledge:
+    description: "學程"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: BodyOfKnowledgeId
+        description: "Id"
+      code:
+        type: string
+        description: "代碼"
+      subjectId:
+        type: string
+        id_type: SubjectId
+        description: "科目Id"
+      year:
+        type: number
+        description: "學年"
+      finalYear:
+        type: number
+        description: "終止學年"
+        nullable: true
+      name:
+        type: string
+        description: "名稱"
+      dimensionIds:
+        type: array<string>
+        id_type: DimensionId
+        description: "向度資訊表的 Id 列表"
+      archived (obsolete):
+        type: boolean
+        description: "舊總庫(v1)有刪除功能，但現在沒有刪除功能，所以這個欄位沒用"
+        nullable: true
+  Catalogs:
+    description: "目錄"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      subjectId_1:
+        fields:
+          subjectId:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: CatalogId
+        description: "Id"
+      catalogGroupId:
+        type: string
+        id_type: CatalogGroupId
+        description: "產品 Id"
+      groupingName:
+        type: string
+        description: "群組名稱"
+      groupingCode:
+        type: string
+        description: "群組代碼"
+      baseName:
+        type: string
+        description: "基礎名稱"
+      subjectId:
+        type: string
+        id_type: SubjectId
+        description: "科目 Id"
+      subjectName:
+        type: string
+        description: "科目名稱"
+      version:
+        type: string
+        description: "版本"
+      versionId:
+        type: string
+        id_type: VersionId
+        description: "版本 Id"
+        nullable: true
+      year:
+        type: number
+        description: "年度"
+      tags:
+        type: array<string>
+        description: "標籤清單"
+      canConfigure:
+        type: boolean
+        description: "是否可設定"
+      description:
+        type: string
+        description: "備註"
+        nullable: true
+      isCoreSubject:
+        type: boolean
+        description: "是否為主科"
+      owner:
+        type: string
+        description: "擁有者"
+      enabled:
+        type: boolean
+        description: "是否啟用"
+      validationRules:
+        type: array<object>
+        description: "驗證規則清單"
+        fields:
+          targetName:
+            type: string
+            description: "目標名稱"
+          isRequired:
+            type: boolean
+            description: "是否必填"
+          shouldCheckValue:
+            type: boolean
+            description: "是否檢查值"
+          dataType:
+            type: string
+            description: "資料類型"
+          valueRegex:
+            type: string
+            description: "值正規表達式"
+            nullable: true
+          orderIndex:
+            type: number
+            description: "排序索引"
+          description:
+            type: string
+            description: "備註"
+            nullable: true
+  CatalogGroups:
+    description: "產品(目錄的產品)"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: CatalogGroupId
+        description: "Id"
+      code:
+        type: string
+        description: "代碼"
+      name:
+        type: string
+        description: "名稱"
+      description:
+        type: string
+        description: "備註"
+        nullable: true
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+  Difficulties:
+    description: "難度"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: DifficultyId
+        description: "Id"
+      value:
+        type: number
+        description: "難度值"
+      name:
+        type: string
+        description: "名稱"
+      remark:
+        type: string
+        description: "備註"
+  Dimensions:
+    description: "向度資訊表"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: DimensionId
+        description: "Id"
+      type:
+        type: string
+        enum_type: DimensionType
+        description: "類型"
+      name:
+        type: string
+        description: "名稱"
+      subjectIds:
+        type: array<string>
+        id_type: SubjectId
+        description: "科目 Id 清單"
+      isFinalized:
+        type: boolean
+        description: "是否已鎖定"
+      revision:
+        type: number
+        description: "版本"
+      finalizedOn:
+        type: datetime
+        description: "鎖定時間"
+        nullable: true
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+      allowSubValues (obsolete):
+        type: boolean
+        description: "不確定用途"
+        nullable: true
+      changeTrackDate (obsolete):
+        type: datetime
+        description: "舊總庫(v1)過去有版本追蹤用"
+        nullable: true
+      version (obsolete):
+        type: string
+        description: "版本，目前是直接放學程 {bodyOfKnowledge.Code}，看起來很不重要"
+        nullable: true
+  DimensionValues:
+    description: "向度資訊"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      path_1:
+        fields:
+          path:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: DimensionValueId
+        description: "Id"
+      dimensionId:
+        type: string
+        description: "向度資訊表 Id"
+      type:
+        type: string
+        enum_type: DimensionType
+        description: "類型"
+      code:
+        type: string
+        description: "代碼"
+      name:
+        type: string
+        description: "名稱"
+      path:
+        type: array<string>
+        id_type: DimensionValueId
+        description: "路徑"
+      author:
+        type: string
+        id_type: UserId
+        description: "作者"
+      description:
+        type: string
+        description: "備註"
+      explanation:
+        type: string
+        description: "說明"
+      article:
+        type: string
+        description: "選文"
+      synopsis:
+        type: string
+        description: "摘要"
+      orderIndex:
+        type: number
+        description: "排序索引"
+      depth:
+        type: number
+        description: "深度"
+      parentId:
+        type: string
+        id_type: DimensionValueId
+        description: "上層 Id"
+        nullable: true
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+      nodeType (obsolete):
+        type: string
+        description: "節點的類型，棄用是因為在設計上有問題，會出現同時是根節點以及同時是葉節點的情況，建議改為用 Path 是否為空來判斷是否為根節點，用是否有子節點來判斷是否為葉節點"
+        nullable: true
+      lastVersionedName (obsolete):
+        type: string
+        description: "過去用於版本追蹤，不確定設計方式"
+        nullable: true
+      archived (obsolete):
+        type: boolean
+        description: "過去使用軟刪除機制，現在沒有軟刪除"
+        nullable: true
+  Documents:
+    description: "五欄檔案"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      documentRepoId_1:
+        fields:
+          documentRepoId:
+            direction: ascending
+      productSectionIds_1:
+        fields:
+          productSectionIds:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: DocumentId
+        description: "Id"
+      documentRepoId:
+        type: string
+        id_type: DocumentRepoId
+        description: "五欄檔案儲存庫 Id"
+      bodyOfKnowledgeId:
+        type: string
+        id_type: BodyOfKnowledgeId
+        description: "學程 Id"
+        nullable: true
+      name:
+        type: string
+        description: "名稱"
+      order:
+        type: number
+        description: "排序"
+      fileId:
+        type: string
+        description: "檔案 Id"
+        nullable: true
+      fileName:
+        type: string
+        description: "檔案名稱"
+      fileSize:
+        type: number
+        description: "檔案大小"
+        nullable: true
+      fileContentType:
+        type: string
+        description: "檔案內容類型"
+        nullable: true
+      fileExtension:
+        type: string
+        description: "檔案副檔名"
+        nullable: true
+      fileUrl:
+        type: string
+        description: "檔案 URL"
+        nullable: true
+      itemCount:
+        type: number
+        description: "題目數量"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      parentId:
+        type: string
+        id_type: DocumentId
+        description: "父五欄檔案 Id"
+        nullable: true
+      preCheckStatus:
+        type: string
+        description: "預檢狀態"
+      catalogId:
+        type: string
+        id_type: CatalogId
+        description: "目錄 Id"
+      productSectionIds:
+        type: array<string>
+        id_type: ProductSectionId
+        description: "產品單元章節 Id 清單"
+      year:
+        type: number
+        description: "年度"
+  DocumentItems:
+    description: "五欄檔案題目"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      itemId_1:
+        fields:
+          itemId:
+            direction: ascending
+      documentId_1:
+        fields:
+          documentId:
+            direction: ascending
+      metadataList.metadataType_1_metadataList.metadataValueId_1:
+        fields:
+          metadataList.metadataType:
+            direction: ascending
+          metadataList.metadataValueId:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: DocumentItemId
+        description: "Id"
+      documentId:
+        type: string
+        id_type: DocumentId
+        description: "五欄檔案 Id"
+      itemId:
+        type: string
+        id_type: ItemId
+        description: "題目 Id"
+      order:
+        type: number
+        description: "排序"
+      addedOn:
+        type: datetime
+        description: "新增時間"
+      itemText:
+        type: string
+        description: "題目文字"
+        nullable: true
+      marked:
+        type: boolean
+        description: "是否修改？不確定用途"
+        nullable: true
+      isNewItem:
+        type: boolean
+        description: "是否為新題目"
+      metadataList:
+        type: array<object>
+        description: "元資料清單，放置出處及題型"
+        fields:
+          metadataValueId:
+            type: string
+            description: "元資料值 Id(就是 出處 及 題型)"
+          metadataType:
+            type: string
+            enum_type: MetadataType
+            description: "元資料類型"
+          metadataValueName:
+            type: string
+            description: "元資料值名稱"
+      metadata (obsolete):
+        type: object
+        description: "元資料，發現註解上有標示應該可以棄用，暫時留著。應該是處理過程中會用到的資料"
+        nullable: true
+  DocumentItemImportStatuses:
+    description: "五欄檔案題目匯入狀態檢視"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      _id.itemId_1:
+        fields:
+          _id.itemId:
+            direction: ascending
+      _id.documentId_1:
+        fields:
+          _id.documentId:
+            direction: ascending
+      taskId_1:
+        fields:
+          taskId:
+            direction: ascending
+      retryCount_1:
+        fields:
+          retryCount:
+            direction: ascending
+    fields:
+      _id:
+        type: object
+        description: "複合鍵"
+        fields:
+          documentId:
+            type: string
+            id_type: DocumentId
+            description: "五欄檔案 Id"
+          itemId:
+            type: string
+            id_type: ItemId
+            description: "題目 Id"
+      taskId:
+        type: objectId
+        id_type: TaskId
+        description: "匯入任務 Id"
+      status:
+        type: string
+        enum_type: ImportItemStatus
+        description: "匯入狀態"
+      reason:
+        type: string
+        description: "失敗原因"
+      fileName:
+        type: string
+        description: "檔案名稱"
+      fileUrl:
+        type: string
+        description: "檔案 URL"
+      uploaderId:
+        type: string
+        id_type: UserId
+        description: "上傳者 Id"
+      uploaderName:
+        type: string
+        description: "上傳者名稱"
+      uploadedAt:
+        type: datetime
+        description: "上傳時間"
+      retryCount:
+        type: number
+        description: "重試次數"
+      finishedAt:
+        type: datetime
+        description: "完成時間"
+        nullable: true
+  DocumentRepositories:
+    description: "五欄檔案儲存庫"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      catalogId_1:
+        fields:
+          catalogId:
+            direction: ascending
+      productContentIds_1:
+        fields:
+          productContentIds:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: DocumentRepoId
+        description: "Id"
+      catalogId:
+        type: string
+        id_type: CatalogId
+        description: "目錄 Id"
+      name:
+        type: string
+        description: "名稱"
+      order:
+        type: number
+        description: "排序"
+      properties:
+        type: object
+        description: "屬性"
+        nullable: true
+      lockedBefore:
+        type: boolean
+        description: "是否曾被鎖定"
+      enabled:
+        type: boolean
+        description: "是否啟用"
+      stageOne:
+        type: object
+        description: "第一階段"
+        nullable: true
+        fields:
+          owner:
+            type: string
+            id_type: UserId
+            description: "擁有者"
+          department:
+            type: string
+            description: "部門"
+          atcDate:
+            type: datetime
+            description: "完成時間"
+            nullable: true
+          etcDate:
+            type: datetime
+            description: "預計完成時間"
+            nullable: true
+      stageTwo:
+        type: object
+        description: "第二階段"
+        nullable: true
+        fields:
+          owner:
+            type: string
+            id_type: UserId
+            description: "擁有者"
+          department:
+            type: string
+            description: "部門"
+          atcDate:
+            type: datetime
+            description: "完成時間"
+            nullable: true
+          etcDate:
+            type: datetime
+            description: "預計完成時間"
+            nullable: true
+      bodyOfKnowledgeId:
+        type: string
+        id_type: BodyOfKnowledgeId
+        description: "學程 Id"
+        nullable: true
+      taggedQuestionCountRecords:
+        type: array<object>
+        description: "標記題目數量記錄清單"
+        fields:
+          productContentId:
+            type: string
+            id_type: ProductContentId
+            description: "產品單元表 Id"
+            nullable: true
+          userId:
+            type: string
+            id_type: UserId
+            description: "使用者 Id"
+            nullable: true
+          taggedOn:
+            type: datetime
+            description: "標記時間"
+      productContentIds:
+        type: array<string>
+        id_type: ProductContentId
+        description: "產品單元表 Id 清單"
+      packageId:
+        type: objectId
+        id_type: PackageId
+        description: "包裹 Id"
+        nullable: true
+  DuplicateDetectionRecords:
+    description: "重複偵測記錄"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: objectId
+        id_type: DuplicateDetectionRecordId
+        description: "Id"
+      sourceItemId:
+        type: string
+        id_type: ItemId
+        description: "來源題目 Id"
+      targetItemId:
+        type: string
+        id_type: ItemId
+        description: "目標題目 Id"
+      vectorSimilarity:
+        type: number
+        description: "向量相似度分數"
+        nullable: true
+      geminiConfidence:
+        type: number
+        description: "Gemini AI 判斷信心度"
+        nullable: true
+      geminiReasoning:
+        type: string
+        description: "Gemini 判斷理由"
+        nullable: true
+      modelVersion:
+        type: string
+        description: "使用的模型版本"
+        nullable: true
+      detectedAt:
+        type: datetime
+        description: "偵測時間"
+      updatedAt:
+        type: datetime
+        description: "最後更新時間"
+      errorMessage:
+        type: string
+        description: "錯誤訊息"
+        nullable: true
+      batchId:
+        type: string
+        description: "批次 Id"
+        nullable: true
+      markingInfo:
+        type: object
+        description: "標記資訊"
+        nullable: true
+        fields:
+          isMarkedAsNonDuplicate:
+            type: boolean
+            description: "是否標記為非重複題"
+            nullable: true
+          markedByUserId:
+            type: string
+            id_type: UserId
+            description: "標記者使用者 Id"
+            nullable: true
+          markedAt:
+            type: datetime
+            description: "標記時間"
+            nullable: true
+          reason:
+            type: string
+            description: "標記原因"
+            nullable: true
+  ExportTasks:
+    description: "匯出任務"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      userId_1:
+        fields:
+          userId:
+            direction: ascending
+      status_1:
+        fields:
+          status:
+            direction: ascending
+    fields:
+      _id:
+        type: objectId
+        id_type: ExportTaskId
+        description: "Id"
+      status:
+        type: string
+        description: "狀態"
+      userId:
+        type: string
+        id_type: UserId
+        description: "使用者 Id"
+      spec:
+        type: object
+        description: "匯出規格"
+        fields:
+          exportName:
+            type: string
+            description: "匯出名稱"
+            nullable: true
+          exportFormat:
+            type: string
+            description: "匯出格式"
+            nullable: true
+          documentRepositoryIds:
+            type: array<string>
+            id_type: DocumentRepoId
+            description: "五欄檔案儲存庫 Id 清單"
+          documentIds:
+            type: array<string>
+            id_type: DocumentId
+            description: "五欄檔案 Id 清單"
+          itemIds:
+            type: array<string>
+            id_type: ItemId
+            description: "題目 Id 清單"
+          exportType:
+            type: string
+            enum_type: ExportType
+            description: "匯出類型"
+          archiveMode:
+            type: string
+            enum_type: ExportArchiveMode
+            description: "壓縮模式"
+      receivedOn:
+        type: datetime
+        description: "接收時間"
+      startedOn:
+        type: datetime
+        description: "開始處理時間"
+        nullable: true
+      finishedOn:
+        type: datetime
+        description: "完成時間"
+        nullable: true
+      apiStartedOn:
+        type: datetime
+        description: "API 開始時間"
+        nullable: true
+      apiFinishedOn:
+        type: datetime
+        description: "API 完成時間"
+        nullable: true
+      renderStartedOn:
+        type: datetime
+        description: "渲染開始時間"
+        nullable: true
+      renderFinishedOn:
+        type: datetime
+        description: "渲染完成時間"
+        nullable: true
+      totalDocumentRepositoryCount:
+        type: number
+        description: "總五欄檔案儲存庫數量"
+        nullable: true
+      totalFileCount:
+        type: number
+        description: "總檔案數量"
+        nullable: true
+      totalItemCount:
+        type: number
+        description: "總題目數量"
+        nullable: true
+      filename:
+        type: string
+        description: "檔案名稱"
+        nullable: true
+      fileUrl:
+        type: string
+        description: "檔案 URL"
+        nullable: true
+      messages:
+        type: array<string>
+        description: "訊息清單"
+      enabled:
+        type: boolean
+        description: "是否啟用"
+  ImageProcessingRecords:
+    description: "圖片處理記錄"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      batchId_1:
+        fields:
+          batchId:
+            direction: ascending
+      batchStatus_1:
+        fields:
+          batchStatus:
+            direction: ascending
+      updatedAt_-1:
+        fields:
+          updatedAt:
+            direction: descending
+    fields:
+      _id:
+        type: string
+        description: "內容 SHA512 雜湊值"
+      embedding:
+        type: array<number>
+        description: "嵌入向量"
+      embeddingModelName:
+        type: string
+        description: "嵌入模型名稱"
+      processingType:
+        type: string
+        enum_type: ProcessingType
+        description: "處理類型"
+        nullable: true
+      processingContent:
+        type: string
+        description: "處理內容"
+        nullable: true
+      processingConfidence:
+        type: number
+        description: "處理信心度"
+        nullable: true
+      processingThinking:
+        type: string
+        description: "處理思考過程"
+        nullable: true
+      processedAt:
+        type: datetime
+        description: "處理時間"
+        nullable: true
+      processingModelVersion:
+        type: string
+        description: "處理模型版本"
+        nullable: true
+      batchId:
+        type: string
+        description: "批次 Id"
+        nullable: true
+      batchStatus:
+        type: string
+        description: "批次狀態"
+        nullable: true
+      batchSubmittedAt:
+        type: datetime
+        description: "批次提交時間"
+        nullable: true
+      createdAt:
+        type: datetime
+        description: "建立時間"
+      updatedAt:
+        type: datetime
+        description: "最後更新時間"
+  ImportTasks:
+    description: "匯入任務"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      items._id_1:
+        fields:
+          items._id:
+            direction: ascending
+      subjectIds_1:
+        fields:
+          subjectIds:
+            direction: ascending
+      catalogGroupCode_1:
+        fields:
+          catalogGroupCode:
+            direction: ascending
+      uploadedAt_1:
+        fields:
+          uploadedAt:
+            direction: ascending
+      uploaderId_1:
+        fields:
+          uploaderId:
+            direction: ascending
+      uploaderName_1:
+        fields:
+          uploaderName:
+            direction: ascending
+      fileName_1:
+        fields:
+          fileName:
+            direction: ascending
+      documentId_1:
+        fields:
+          documentId:
+            direction: ascending
+    fields:
+      _id:
+        type: objectId
+        id_type: TaskId
+        description: "Id"
+      catalogGroupCode:
+        type: string
+        description: "目錄群組代碼"
+      subjectIds:
+        type: array<string>
+        id_type: SubjectId
+        description: "科目 Id 清單"
+      documentId:
+        type: string
+        id_type: DocumentId
+        description: "五欄檔案 Id"
+      repositoryId:
+        type: string
+        id_type: RepositoryId
+        description: "倉庫 Id"
+      importFinishedItemCount:
+        type: number
+        description: "匯入完成題目數"
+      totalItemCount:
+        type: number
+        description: "總題目數"
+      status:
+        type: string
+        enum_type: ImportTaskStatus
+        description: "匯入狀態"
+      fileName:
+        type: string
+        description: "檔案名稱"
+      fileUrl:
+        type: string
+        description: "檔案 URL"
+      uploaderId:
+        type: string
+        id_type: UserId
+        description: "上傳者 Id"
+      uploaderName:
+        type: string
+        description: "上傳者名稱"
+      uploadedAt:
+        type: datetime
+        description: "上傳時間"
+      finishedAt:
+        type: datetime
+        description: "匯入完成時間"
+        nullable: true
+      logs:
+        type: array<object>
+        description: "匯入日誌"
+        fields:
+          time:
+            type: datetime
+            description: "時間"
+          message:
+            type: string
+            description: "訊息"
+      items:
+        type: array<object>
+        description: "匯入題目"
+        fields:
+          id:
+            type: string
+            id_type: ItemId
+            description: "題目 Id"
+          status:
+            type: string
+            enum_type: ImportItemStatus
+            description: "題目狀態"
+          updatedAt:
+            type: datetime
+            description: "更新時間"
+  Items:
+    description: "題目"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      updatedOn_-1:
+        fields:
+          updatedOn:
+            direction: descending
+      s3Copied_1:
+        fields:
+          s3Copied:
+            direction: ascending
+      contentResourceManifest.imageSha512Hash_1:
+        fields:
+          contentResourceManifest.imageSha512Hash:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: ItemId
+        description: "Id"
+      difficulty:
+        type: number
+        description: "難度"
+        nullable: true
+      correctness:
+        type: string
+        description: "正確性"
+      onlineReadiness:
+        type: string
+        description: "上線準備度"
+      metadata:
+        type: object
+        description: "元資料"
+      content:
+        type: object
+        description: "內容"
+        fields:
+          preamble:
+            type: string
+            description: "前言"
+            nullable: true
+          solution:
+            type: string
+            description: "解析"
+            nullable: true
+          fullContent:
+            type: string
+            description: "完整內容"
+            nullable: true
+          questions:
+            type: array<object>
+            description: "子題清單"
+            fields:
+              stem:
+                type: string
+                description: "題幹"
+                nullable: true
+              questionIndex:
+                type: number
+                description: "子題索引"
+              optionFirstLetter:
+                type: string
+                description: "選項首字母"
+                nullable: true
+              solution:
+                type: string
+                description: "解析"
+                nullable: true
+              options:
+                type: array<string>
+                description: "選項清單"
+              answers:
+                type: array<unknown>
+                description: "答案清單"
+              answerImageIds:
+                type: array<unknown>
+                description: "答案圖片 Id 清單"
+              latexAnswers:
+                type: array<boolean>
+                description: "LaTeX 答案清單"
+              proposeAnswers:
+                type: array<unknown>
+                description: "建議答案清單"
+              suggestAnswers:
+                type: array<unknown>
+                description: "推薦答案清單"
+                nullable: true
+              difficulty:
+                type: number
+                description: "難度"
+                nullable: true
+              answeringMethod:
+                type: string
+                description: "作答方式"
+              isSequenceOption:
+                type: boolean
+                description: "是否為順序選項"
+      subjectIds:
+        type: array<string>
+        id_type: SubjectId
+        description: "科目 Id 清單"
+      resourceLinks:
+        type: array<object>
+        description: "資源連結清單"
+        fields:
+          name:
+            type: string
+            description: "名稱"
+          rel:
+            type: string
+            description: "關係"
+          href:
+            type: string
+            description: "超連結"
+          contentType:
+            type: string
+            description: "內容類型"
+      contentResourceManifest:
+        type: array<object>
+        description: "內容資源清單"
+        fields:
+          id:
+            type: string
+            description: "Id"
+          name:
+            type: string
+            description: "名稱"
+          contentType:
+            type: string
+            description: "內容類型"
+          size:
+            type: number
+            description: "大小"
+          imageSha512Hash:
+            type: string
+            description: "圖片 SHA512 雜湊值"
+            nullable: true
+      textIdentifier:
+        type: string
+        description: "文字識別碼"
+        nullable: true
+      identifier:
+        type: string
+        description: "識別碼"
+        nullable: true
+      imagePositionIdentifier:
+        type: string
+        description: "圖片位置識別碼"
+        nullable: true
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      ver:
+        type: number
+        description: "版本"
+      copyright:
+        type: number
+        enum_type: CopyrightType
+        description: "版權"
+        nullable: true
+      enabled:
+        type: boolean
+        description: "是否啟用"
+      matcher:
+        type: string
+        description: "比對人員"
+        nullable: true
+      topic:
+        type: string
+        description: "議題"
+        nullable: true
+      editorialNote:
+        type: string
+        description: "編輯備註"
+        nullable: true
+      literacy:
+        type: boolean
+        description: "素養題"
+      forcedSingle:
+        type: boolean
+        description: "強制單題"
+      userAnswerCount:
+        type: number
+        description: "答案數"
+        nullable: true
+      hasTable:
+        type: boolean
+        description: "是否有表格"
+      s3Copied:
+        type: datetime
+        description: "判斷是否有複製到新 s3"
+        nullable: true
+  ItemIssues:
+    description: "題目問題"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      itemId_1:
+        fields:
+          itemId:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: ItemIssueId
+        description: "Id"
+      itemId:
+        type: string
+        id_type: ItemId
+        description: "題目 Id"
+      documentId:
+        type: string
+        id_type: DocumentId
+        description: "五欄檔案 Id"
+        nullable: true
+      fileName:
+        type: string
+        description: "檔案名稱"
+        nullable: true
+      title:
+        type: string
+        description: "標題"
+      labels:
+        type: array<string>
+        description: "標籤清單"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+        nullable: true
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+        nullable: true
+  ItemMergeHistories:
+    description: "題目合併歷史"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: objectId
+        id_type: ItemMergeHistoryId
+        description: "Id"
+      baseItemId:
+        type: string
+        id_type: ItemId
+        description: "基準題 Id"
+      mergeItemId:
+        type: string
+        id_type: ItemId
+        description: "整併題 Id"
+      userId:
+        type: string
+        id_type: UserId
+        description: "使用者 Id"
+      mergedAt:
+        type: datetime
+        description: "合併時間"
+      reason:
+        type: string
+        description: "合併原因"
+        nullable: true
+      originalBaseMetadata:
+        type: object
+        description: "基準題原始元資料"
+      originalMergeMetadata:
+        type: object
+        description: "整併題原始元資料"
+      mergeOperations:
+        type: array<object>
+        description: "合併操作清單"
+        fields:
+          fieldName:
+            type: string
+            description: "欄位名稱"
+          fieldDisplayName:
+            type: string
+            description: "欄位顯示名稱"
+          originalValue:
+            type: object
+            description: "原始值"
+            nullable: true
+          mergeValue:
+            type: object
+            description: "合併值"
+            nullable: true
+          resultValue:
+            type: object
+            description: "結果值"
+            nullable: true
+          originalDisplayValue:
+            type: string
+            description: "原始顯示值"
+            nullable: true
+          mergeDisplayValue:
+            type: string
+            description: "合併顯示值"
+            nullable: true
+          resultDisplayValue:
+            type: string
+            description: "結果顯示值"
+            nullable: true
+          mergeRule:
+            type: string
+            description: "合併規則"
+          operationTime:
+            type: datetime
+            description: "操作時間"
+          notes:
+            type: string
+            description: "備註"
+            nullable: true
+      duplicateDetectionRecordId:
+        type: objectId
+        id_type: DuplicateDetectionRecordId
+        description: "重複偵測記錄 Id"
+        nullable: true
+      canRevert:
+        type: boolean
+        description: "是否可復原"
+      createdAt:
+        type: datetime
+        description: "建立時間"
+  ItemMapping.ItemMetadatas:
+    description: "題目元資料"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: ItemId
+        description: "題目 Id"
+      answeringMethods:
+        type: array<string>
+        description: "作答方式"
+      questionCount:
+        type: number
+        description: "題數"
+      isOnline:
+        type: boolean
+        description: "是否線上"
+  ItemStatistics:
+    description: "題目統計"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: ItemId
+        description: "Id"
+      allEachDuration:
+        type: number
+        description: "全部每題時長"
+        nullable: true
+      correctRate:
+        type: number
+        description: "正確率"
+        nullable: true
+      difficulty:
+        type: number
+        description: "難度"
+        nullable: true
+      initialDifficulty:
+        type: number
+        description: "初始難度"
+        nullable: true
+      reliableFlag:
+        type: number
+        description: "可靠標記"
+        nullable: true
+      sampleSize:
+        type: number
+        description: "樣本數"
+        nullable: true
+      tEachDuration:
+        type: number
+        description: "答對每題時長"
+        nullable: true
+      wEachDuration:
+        type: number
+        description: "答錯每題時長"
+        nullable: true
+      timeStamp:
+        type: string
+        description: "時間戳記"
+        nullable: true
+      questions:
+        type: array<object>
+        description: "子題統計清單"
+        nullable: true
+        fields:
+          answers:
+            type: array<object>
+            description: "答案清單"
+            nullable: true
+            fields:
+              answerId:
+                type: number
+                description: "答案 Id"
+                nullable: true
+              correctRate:
+                type: number
+                description: "正確率"
+                nullable: true
+              difficulty:
+                type: number
+                description: "難度"
+                nullable: true
+          questionIndex:
+            type: number
+            description: "子題索引"
+            nullable: true
+          trapItem:
+            type: boolean
+            description: "是否為陷阱題"
+            nullable: true
+          optionTrap:
+            type: array<string>
+            description: "選項陷阱清單"
+            nullable: true
+          baseItem:
+            type: boolean
+            description: "是否為基礎題"
+            nullable: true
+          difficulty:
+            type: number
+            description: "難度"
+            nullable: true
+          correctRate:
+            type: number
+            description: "正確率"
+            nullable: true
+          optionStats:
+            type: array<object>
+            description: "選項統計清單"
+            nullable: true
+            fields:
+              chosenRate:
+                type: number
+                description: "選擇率"
+                nullable: true
+              optionIndex:
+                type: number
+                description: "選項索引"
+                nullable: true
+  ItemYearDimensionValues:
+    description: "題目學年向度資訊"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      itemId_1:
+        fields:
+          itemId:
+            direction: ascending
+      itemId_1_year_1_bodyOfKnowledgeId_1_dimensionValueId_1_orderIndex_1_usageType_1_questionIndex_1:
+        fields:
+          itemId:
+            direction: ascending
+          year:
+            direction: ascending
+          bodyOfKnowledgeId:
+            direction: ascending
+          dimensionValueId:
+            direction: ascending
+          orderIndex:
+            direction: ascending
+          usageType:
+            direction: ascending
+          questionIndex:
+            direction: ascending
+      dimensionValueId_1:
+        fields:
+          dimensionValueId:
+            direction: ascending
+    fields:
+      _id:
+        type: objectId
+        id_type: ItemYearDimensionValueId
+        description: "Id"
+      bodyOfKnowledgeId:
+        type: string
+        id_type: BodyOfKnowledgeId
+        description: "學程 Id"
+      year:
+        type: number
+        description: "學年"
+      itemId:
+        type: string
+        id_type: ItemId
+        description: "題目 Id"
+      questionIndex:
+        type: number
+        description: "題號索引"
+      dimensionValueId:
+        type: string
+        id_type: DimensionValueId
+        description: "向度資訊 Id"
+      usageType:
+        type: string
+        enum_type: UsageType
+        description: "使用類型"
+      orderIndex:
+        type: number
+        description: "排序索引"
+  Products:
+    description: "產品（產品單元表的產品）"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: ProductId
+        description: "Id"
+      name:
+        type: string
+        description: "名稱"
+      tags:
+        type: array<string>
+        description: "標籤清單"
+      purpose:
+        type: string
+        description: "目的"
+  ProductContents:
+    description: "產品單元表"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      bodyOfKnowledgeId_1_year_1:
+        fields:
+          bodyOfKnowledgeId:
+            direction: ascending
+          year:
+            direction: ascending
+      year_1:
+        fields:
+          year:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: ProductContentId
+        description: "Id"
+      isFinalized:
+        type: boolean
+        description: "是否已鎖定"
+      finalizedOn:
+        type: datetime
+        description: "鎖定時間"
+        nullable: true
+      revision:
+        type: number
+        description: "版本"
+      productId:
+        type: string
+        id_type: ProductId
+        description: "產品 Id"
+      subjectId:
+        type: string
+        id_type: SubjectId
+        description: "科目 Id"
+      year:
+        type: number
+        description: "學年"
+      term:
+        type: string
+        enum_type: TermEnum
+        description: "期別"
+      name:
+        type: string
+        description: "名稱"
+      versionId:
+        type: string
+        id_type: VersionId
+        description: "版本 Id"
+      department:
+        type: string
+        description: "部門"
+      editor:
+        type: string
+        id_type: UserId
+        description: "編輯者"
+      expectedLockDate:
+        type: datetime
+        description: "預期鎖定日期"
+      semester:
+        type: string
+        enum_type: SemesterEnum
+        description: "學期"
+      prerequisite:
+        type: string
+        description: "先修課程"
+        nullable: true
+      bodyOfKnowledgeId:
+        type: string
+        id_type: BodyOfKnowledgeId
+        description: "學程 Id"
+        nullable: true
+      enabled:
+        type: boolean
+        description: "是否啟用"
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+  ProductSections:
+    description: "產品單元章節"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      documentIds_1:
+        fields:
+          documentIds:
+            direction: ascending
+      productContentId_1:
+        fields:
+          productContentId:
+            direction: ascending
+      dimensionValueIds_1:
+        fields:
+          dimensionValueIds:
+            direction: ascending
+      path_1:
+        fields:
+          path:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: ProductSectionId
+        description: "Id"
+      productContentId:
+        type: string
+        description: "產品單元表 Id"
+      volume:
+        type: string
+        description: "冊次"
+      code:
+        type: string
+        description: "代碼"
+      name:
+        type: string
+        description: "名稱"
+      termTests:
+        type: array<string>
+        description: "段考範圍"
+      description:
+        type: string
+        description: "備註"
+      documentIds (obsolete):
+        type: array<string>
+        description: "已棄用，改用 Documents.ProductSectionIds 建立關聯"
+        nullable: true
+      dimensionValueIds:
+        type: array<string>
+        id_type: DimensionValueId
+        description: "向度資訊 Id 清單"
+      isVisible:
+        type: boolean
+        description: "是否可見"
+      isEnable:
+        type: boolean
+        description: "是否啟用"
+      isCollapsible:
+        type: boolean
+        description: "是否可摺疊"
+      path:
+        type: array<string>
+        id_type: ProductSectionId
+        description: "路徑"
+      orderIndex:
+        type: number
+        description: "排序索引"
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+      hasChildren:
+        type: boolean
+        description: "是否有子項目"
+  ItemMapping.ProductSectionItemMembers:
+    description: "產品單元章節題目成員"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      productContentId_1_documentRepoId_1:
+        fields:
+          productContentId:
+            direction: ascending
+          documentRepoId:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        description: "Id"
+      sectionId:
+        type: string
+        id_type: ProductSectionId
+        description: "產品單元章節 Id"
+      sectionCode:
+        type: string
+        description: "產品單元章節代碼"
+      sectionName:
+        type: string
+        description: "產品單元章節名稱"
+      productContentId:
+        type: string
+        id_type: ProductContentId
+        description: "產品單元 Id"
+      itemId:
+        type: string
+        id_type: ItemId
+        description: "題目 Id"
+      documentId:
+        type: string
+        id_type: DocumentId
+        description: "五欄檔案 Id"
+      documentName:
+        type: string
+        description: "五欄檔案名稱"
+      documentRepoId:
+        type: string
+        id_type: DocumentRepoId
+        description: "五欄檔案儲存庫 Id"
+      documentItemOrder:
+        type: number
+        description: "五欄檔案題目排序"
+      documentOrder:
+        type: number
+        description: "五欄檔案排序"
+      hits:
+        type: array<object>
+        description: "命中清單"
+        fields:
+          dimValues:
+            type: array<object>
+            description: "向度資訊清單"
+            fields:
+              id:
+                type: string
+                id_type: DimensionValueId
+                description: "向度資訊 Id"
+              name:
+                type: string
+                description: "名稱"
+              code:
+                type: string
+                description: "代碼"
+              type:
+                type: string
+                enum_type: DimensionType
+                description: "類型"
+              usageType:
+                type: string
+                enum_type: UsageType
+                description: "使用類型"
+      documentLink:
+        type: boolean
+        description: "五欄檔案連結"
+      pedigreeContentIds:
+        type: array<string>
+        id_type: ProductContentId
+        description: "族譜產品單元 Id 清單"
+      pedigreeSectionIds:
+        type: array<string>
+        id_type: ProductSectionId
+        description: "族譜產品單元章節 Id 清單"
+      groupingId:
+        type: string
+        description: "群組 Id"
+      volumeCode:
+        type: string
+        description: "冊次代碼"
+      volumeName:
+        type: string
+        description: "冊次名稱"
+      gradeCode:
+        type: string
+        description: "年級代碼"
+      terms:
+        type: string
+        description: "期"
+  ItemMapping.ProductSectionMetadatas:
+    description: "產品單元章節元資料"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      productContentId_1:
+        fields:
+          productContentId:
+            direction: ascending
+      pedigreeContentIds_1:
+        fields:
+          pedigreeContentIds:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: ProductSectionId
+        description: "產品單元章節 Id"
+      productContentId:
+        type: string
+        id_type: ProductContentId
+        description: "產品單元 Id"
+      pedigreeContentIds:
+        type: array<string>
+        id_type: ProductContentId
+        description: "族譜產品單元 Id 清單"
+      maxPedisgreeDimensionValueIds:
+        type: array<string>
+        id_type: DimensionValueId
+        description: "最大族譜向度資訊 Id 清單"
+      pedisgreeDimensionValueIds:
+        type: array<string>
+        id_type: DimensionValueId
+        description: "族譜向度資訊 Id 清單"
+      dimensionValues:
+        type: array<object>
+        description: "向度資訊清單"
+        fields:
+          id:
+            type: string
+            id_type: DimensionValueId
+            description: "向度資訊 Id"
+          code:
+            type: string
+            description: "代碼"
+          name:
+            type: string
+            description: "名稱"
+          type:
+            type: string
+            enum_type: DimensionType
+            description: "類型"
+          dimensionId:
+            type: string
+            id_type: DimensionId
+            description: "向度資訊表 Id"
+      hasLesson:
+        type: boolean
+        description: "是否有課程"
+      hasKnowledge:
+        type: boolean
+        description: "是否有知識點"
+      order:
+        type: number
+        description: "排序"
+      year:
+        type: number
+        description: "年度"
+  Sources:
+    description: "出處表"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: SourceId
+        description: "Id"
+      subjectId:
+        type: string
+        id_type: SubjectId
+        description: "科目 Id"
+      year:
+        type: number
+        description: "學年"
+      isFinalized:
+        type: boolean
+        description: "是否已鎖定"
+      finalizedOn:
+        type: datetime
+        description: "鎖定時間"
+        nullable: true
+      revision:
+        type: number
+        description: "版本"
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+  SourceValues:
+    description: "出處"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: SourceValueId
+        description: "Id"
+      sourceId:
+        type: string
+        id_type: SourceId
+        description: "出處表 Id"
+      name:
+        type: string
+        description: "名稱"
+      copyright:
+        type: boolean
+        description: "版權"
+      description:
+        type: string
+        description: "備註"
+      orderIndex:
+        type: number
+        description: "排序索引"
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+      lastVersionedName (obsolete):
+        type: string
+        description: "已棄用，過去用於追蹤版本的名稱"
+        nullable: true
+  Subjects:
+    description: "科目"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: SubjectId
+        description: "Id"
+      name:
+        type: string
+        description: "名稱"
+      parentSubjectId:
+        type: string
+        id_type: SubjectId
+        description: "父科目 Id"
+        nullable: true
+      educationCode:
+        type: string
+        description: "教育代碼"
+      educationName:
+        type: string
+        description: "教育名稱"
+      simpleName:
+        type: string
+        description: "簡稱"
+      educationOrderIndex:
+        type: number
+        description: "教育排序索引"
+      orderIndex:
+        type: number
+        description: "排序索引"
+      area:
+        type: string
+        description: "領域"
+  TextbookContents:
+    description: "課本章節表"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: TextbookContentId
+        description: "Id"
+      volumeId:
+        type: string
+        id_type: VolumeId
+        description: "冊次 Id"
+      name:
+        type: string
+        description: "名稱"
+      versionId:
+        type: string
+        id_type: VersionId
+        description: "版本 Id"
+      isFinalized:
+        type: boolean
+        description: "是否已鎖定"
+      revision:
+        type: number
+        description: "版本"
+      finalizedOn:
+        type: datetime
+        description: "鎖定時間"
+        nullable: true
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+  TextbookSections:
+    description: "課本章節"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+      dimensionValueIds_1:
+        fields:
+          dimensionValueIds:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: TextbookSectionId
+        description: "Id"
+      volumeName:
+        type: string
+        description: "冊次名稱"
+      textbookContentId:
+        type: string
+        id_type: TextbookContentId
+        description: "課本章節表 Id"
+      code:
+        type: string
+        description: "代碼"
+      name:
+        type: string
+        description: "名稱"
+      termTests:
+        type: array<string>
+        description: "段考範圍"
+      description:
+        type: string
+        description: "備註"
+      dimensionValueIds:
+        type: array<string>
+        id_type: DimensionValueId
+        description: "向度資訊 Id 清單"
+      path:
+        type: array<string>
+        id_type: TextbookSectionId
+        description: "路徑"
+      orderIndex:
+        type: number
+        description: "排序索引"
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+  UserConversations:
+    description: "使用者對話"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: objectId
+        id_type: UserConversationId
+        description: "Id"
+      userId:
+        type: string
+        id_type: UserId
+        description: "使用者 Id"
+      createdAt:
+        type: datetime
+        description: "建立時間"
+      updatedAt:
+        type: datetime
+        description: "更新時間"
+      lastActivity:
+        type: datetime
+        description: "最後活動時間"
+      isActive:
+        type: boolean
+        description: "是否啟用"
+      messages:
+        type: array<object>
+        description: "訊息清單"
+        fields:
+          _id:
+            type: objectId
+            id_type: ConversationMessageId
+            description: "Id"
+          role:
+            type: string
+            enum_type: ConversationRole
+            description: "角色"
+          content:
+            type: string
+            description: "內容"
+          timestamp:
+            type: datetime
+            description: "時間戳記"
+          tokenCount:
+            type: number
+            description: "Token 數"
+          usedTools:
+            type: array<string>
+            description: "使用的工具清單"
+            nullable: true
+          toolResults:
+            type: object
+            description: "工具結果"
+            nullable: true
+          processingTimeMs:
+            type: number
+            description: "處理時間（毫秒）"
+      totalTokens:
+        type: number
+        description: "總 Token 數"
+      requiresCleanup:
+        type: boolean
+        description: "是否需要清理"
+      cleanupReason:
+        type: string
+        description: "清理原因"
+        nullable: true
+  UserTypes:
+    description: "題型表"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: UserTypeId
+        description: "Id"
+      subjectId:
+        type: string
+        id_type: SubjectId
+        description: "科目 Id"
+      year:
+        type: number
+        description: "學年"
+      isFinalized:
+        type: boolean
+        description: "是否已鎖定"
+      finalizedOn:
+        type: datetime
+        description: "鎖定時間"
+        nullable: true
+      revision:
+        type: number
+        description: "版本"
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+  UserTypeValues:
+    description: "題型"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: UserTypeValueId
+        description: "Id"
+      userTypeId:
+        type: string
+        id_type: UserTypeId
+        description: "題型表 Id"
+      name:
+        type: string
+        description: "名稱"
+      groupingName:
+        type: string
+        description: "分組名稱"
+      answeringMethod:
+        type: string
+        description: "作答方式"
+        nullable: true
+      newlineCount:
+        type: number
+        description: "換行次數"
+      shouldAddBracket:
+        type: boolean
+        description: "是否應該加上括弧"
+      description:
+        type: string
+        description: "備註"
+        nullable: true
+      orderIndex:
+        type: number
+        description: "排序索引"
+      createdBy:
+        type: string
+        id_type: UserId
+        description: "建立者"
+      createdOn:
+        type: datetime
+        description: "建立時間"
+      updatedBy:
+        type: string
+        id_type: UserId
+        description: "更新者"
+      updatedOn:
+        type: datetime
+        description: "更新時間"
+      lastVersionedName (obsolete):
+        type: string
+        description: "已棄用，過去用於追蹤版本的名稱"
+        nullable: true
+  ValidationTargets:
+    description: "驗證目標"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: ValidationTargetId
+        description: "Id"
+      name:
+        type: string
+        description: "名稱"
+      isRequired:
+        type: boolean
+        description: "是否必填"
+      shouldCheckValue:
+        type: boolean
+        description: "是否檢查值"
+      dataType:
+        type: string
+        description: "資料類型"
+      valueRegex:
+        type: string
+        description: "值正規表達式"
+        nullable: true
+      orderIndex:
+        type: number
+        description: "排序索引"
+      description:
+        type: string
+        description: "備註"
+        nullable: true
+      archived:
+        type: boolean
+        description: "是否封存"
+  Versions:
+    description: "版本"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: VersionId
+        description: "Id"
+      name:
+        type: string
+        description: "名稱"
+      orderIndex:
+        type: number
+        description: "排序索引"
+  Volumes:
+    description: "冊次"
+    indices:
+      _id_:
+        fields:
+          _id:
+            direction: ascending
+    fields:
+      _id:
+        type: string
+        id_type: VolumeId
+        description: "Id"
+      subjectId:
+        type: string
+        id_type: SubjectId
+        description: "科目 Id"
+      name:
+        type: string
+        description: "名稱"
+      code:
+        type: string
+        description: "代碼"
+      year:
+        type: number
+        description: "學年"
+      bodyOfKnowledgeId:
+        type: string
+        id_type: BodyOfKnowledgeId
+        description: "學程 Id"

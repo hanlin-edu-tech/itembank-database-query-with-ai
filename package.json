@@ -1,0 +1,28 @@
+{
+  "name": "itembank-database-query-ai-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "check-env": "ts-node src/check-env.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/mongodb": "^4.0.6",
+    "dotenv": "^17.2.3",
+    "js-yaml": "^4.1.1",
+    "mongodb": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,9 @@
+node_modules
+.env
+.DS_Store
+
+# 不加上，因為這樣子 GEMINI 會讀不到這些資料夾
+#src/scripts/*
+#!src/scripts/.gitkeep
+#src/outputs/*
+#!src/outputs/.gitkeep
